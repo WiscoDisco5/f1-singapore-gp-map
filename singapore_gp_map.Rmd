@@ -26,7 +26,7 @@ selected_location <- subset(f1_locations, name %in% selected_name)
 
 ## Intro
 
-This document maps 
+This document leverages GeoJSON data from bacinger's f1-circuits repository as well as the `leaflet` R package to plot the location and circuit map for the Singapore Grand Prix--an annual race for Formula 1. A huge thanks to bacinger for putting these dataset's together and making them publiclly available! 
 
 ## Circuit Information
 **Opened:** `r selected_location$opened` <br />
