@@ -1,5 +1,11 @@
 ---
 title: 'Formula 1: Singapore Grand Prix Map'
+knit: (function(input_file, encoding) {
+  out_dir <- 'docs';
+  rmarkdown::render(input_file,
+                    encoding=encoding, 
+                    output_file=file.path(dirname(input_file), out_dir, 'index.html'))
+  })
 author: "John Goodwin"
 date: "5/4/2021"
 output: html_document
@@ -14,8 +20,10 @@ library(magrittr)
 
 ```{r load_data, include=FALSE}
 ## Load GeoJSON
-f1_circuits <- readOGR("f1-circuits-master/f1-circuits.geojson", encoding = "UTF-8", use_iconv = TRUE)
-f1_locations <- readOGR("f1-circuits-master/f1-locations.geojson", encoding = "UTF-8", use_iconv = TRUE)
+f1_circuits <- readOGR("./f1-circuits/f1-circuits.geojson",
+                       encoding = "UTF-8", use_iconv = TRUE)
+f1_locations <- readOGR("./f1-circuits/f1-locations.geojson",
+                        encoding = "UTF-8", use_iconv = TRUE)
 
 ## Filter GeoJSONs to the Singapore GP data
 f1_circuits$Name
@@ -26,7 +34,7 @@ selected_location <- subset(f1_locations, name %in% selected_name)
 
 ## Intro
 
-This document leverages GeoJSON data from bacinger's f1-circuits repository as well as the `leaflet` R package to plot the location and circuit map for the Singapore Grand Prix--an annual race for Formula 1. A huge thanks to bacinger for putting these dataset's together and making them publiclly available! 
+This document leverages GeoJSON data from [bacinger's f1-circuits repository](https://github.com/bacinger/f1-circuits) as well as the `leaflet` R package to plot the location and circuit map for the Singapore Grand Prix--an annual race for Formula 1. A huge thanks to bacinger for putting these dataset's together and making them publicly available! 
 
 ## Circuit Information
 **Opened:** `r selected_location$opened` <br />
