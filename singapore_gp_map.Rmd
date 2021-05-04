@@ -1,0 +1,60 @@
+---
+title: 'Formula 1: Singapore Grand Prix Map'
+author: "John Goodwin"
+date: "5/4/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(leaflet)
+library(rgdal)
+library(magrittr)
+```
+
+```{r load_data, include=FALSE}
+## Load GeoJSON
+f1_circuits <- readOGR("f1-circuits-master/f1-circuits.geojson", encoding = "UTF-8", use_iconv = TRUE)
+f1_locations <- readOGR("f1-circuits-master/f1-locations.geojson", encoding = "UTF-8", use_iconv = TRUE)
+
+## Filter GeoJSONs to the Singapore GP data
+f1_circuits$Name
+selected_name <- "Marina Bay Street Circuit"
+selected_circuit <- subset(f1_circuits, Name %in% selected_name)
+selected_location <- subset(f1_locations, name %in% selected_name)
+```
+
+## Intro
+
+This document maps 
+
+## Circuit Information
+**Opened:** `r selected_location$opened` <br />
+**First GP:** `r selected_location$firstgp` <br />
+**Length:** `r selected_location$length`m <br />
+**Altitude:** `r selected_location$alt`m <br />
+
+## World Map
+```{r world_map, echo=FALSE}
+content <- paste(sep = '<br/>', 
+                 paste0('<b>', selected_location$name, '</b>'),
+                 selected_location$location)
+
+selected_location %>%
+  leaflet() %>%
+  addProviderTiles(providers$CartoDB.Positron) %>%
+  addMarkers() %>%
+  addPopups(popup = content,
+            options = popupOptions(closeOnClick = FALSE)) %>%
+  setView(0,0,2)
+
+```
+
+## Circuit Map
+
+```{r circuit_map, echo=FALSE}
+selected_circuit %>%
+  leaflet() %>%
+  addProviderTiles(providers$CartoDB.Positron) %>%
+  addPolylines(color = '#FF1801', opacity = 0.8)
+```
